@@ -30,7 +30,7 @@ export const SearchForm = ({ markets }) => {
   return (
     <div className="flex flex-col h-full w-full items-center gap-12 ">
       <div className="flex flex-col w-full justify-between gap-10 items-center">
-        <div className={`flex flex-row w-full justify-around`}>
+        <div className={`flex flex-row w-full justify-center gap-2`}>
           <Input
             label={"BUY"}
             name={"BUY"}

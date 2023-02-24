@@ -21,11 +21,12 @@ export const getMarketDataForPair = async (from, to, market) => {
 export const getLastHourDataForPair = async (from, to, market) => {
   if (from && to && market) {
     const pair = `${from}-${to}`;
+
     const historyData = await cc.histoHour(from, to, {
       exchange: market,
-      limit: 5,
+      limit: 3,
     });
-
+    console.log(historyData);
     return {
       [pair]: historyData.map((item) => ({ low: item.low, high: item.high })),
     };

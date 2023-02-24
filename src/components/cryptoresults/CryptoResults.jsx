@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
 import { MoonLoader } from "react-spinners";
 import { fetchHourlyPreviousDataPerPair } from "../../context/cryptoDataReducer";
 
@@ -17,8 +16,8 @@ const customStyles = {
 };
 
 export const CryptoResults = () => {
+  let marketName;
   const dispatch = useDispatch();
-  const marketName = useLocation().pathname.split("/")[1];
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalData, setModalData] = useState({});
@@ -31,7 +30,6 @@ export const CryptoResults = () => {
     cryptoHistoryPerPair,
   } = useSelector((state) => state.cryptoData);
 
-  
   useEffect(() => {
     if (!isOpenModal) return;
     dispatch(fetchHourlyPreviousDataPerPair(modalData));
@@ -39,24 +37,31 @@ export const CryptoResults = () => {
 
   return (
     <>
-      <Modal isOpen={isOpenModal} style={customStyles}>
-        <div onClick={() => setIsOpenModal(!isOpenModal)}>x</div>
+      <Modal isOpen={isOpenModal} style={customStyles} ariaHideApp={false}>
+        <div
+          onClick={() => setIsOpenModal(!isOpenModal)}
+          className={`cursor-pointer border-2 w-1/5 rounded-full flex justify-center font-bold mb-6`}
+        >
+          X
+        </div>
         {cryptoHistoryDataLoading ? (
           <MoonLoader cssOverride={{ position: `absolute`, top: `50%` }} />
         ) : (
           (
-            (Object.keys(cryptoHistoryPerPair).length > 0 &&
+            (Object.keys(cryptoHistoryPerPair).map((market) => {
+              marketName = market;
+            }).length > 0 &&
               cryptoHistoryPerPair[marketName] &&
               cryptoHistoryPerPair[marketName][
                 `${modalData.from}-${modalData.to}`
               ]) ||
             []
-          ).map((item) => {
+          ).map((item, idx) => {
             const { low, high } = item;
             return (
-              <div>
-                <p>Low: {low}</p>
-                <p>High: {high}</p>
+              <div className="flex flex-row justify-between gap-4 font-bold" key={`${item}-${idx}`}>
+                <p>Low: {low.toFixed(2)}</p>
+                <p>High: {high.toFixed(2)}</p>
               </div>
             );
           })
@@ -69,7 +74,7 @@ export const CryptoResults = () => {
       >
         {error}
       </div>
-      <div className="w-full flex justify-around border-t-8 mt-20 pt-16 pb-16 bg-gradient-to-r from-cyan-500 to-blue-500 absolute bottom-0">
+      <div className="w-full flex justify-around border-t-8 mt-20 pt-16 pb-16 bg-gradient-to-r from-cyan-500 to-blue-500 absolute bottom-0 flex-wrap gap-2">
         {cryptoPairPriceLoading ? (
           <MoonLoader
             cssOverride={{
@@ -86,7 +91,7 @@ export const CryptoResults = () => {
 
             return (
               <div
-                className="border-4 lg:w-[30%]  justify-center items-center flex flex-col rounded-md bg-[white] pt-4 pb-4"
+                className="border-4 lg:w-[20%]  justify-center items-center flex flex-col rounded-md bg-[white] pt-4 pb-4"
                 key={`${market}-${cryptoPairAndPriceObject}`}
               >
                 <p className=" font-bold">{market}</p>
@@ -105,7 +110,7 @@ export const CryptoResults = () => {
                       key={`${pair}-${[price]}`}
                     >
                       <p
-                        className="font-medium"
+                        className="font-medium cursor-pointer sm:text-[0.5rem]"
                         onClick={() => {
                           setIsOpenModal(!isOpenModal);
                           setModalData({

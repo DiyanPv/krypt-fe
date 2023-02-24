@@ -57,14 +57,19 @@ const cryptoDataReducer = createSlice({
       if (!state.cryptoPairsPerMarket[market])
         state.cryptoPairsPerMarket[market] = {};
       state.cryptoPairsPerMarket[market][pair] = res[pair];
+      if (state.error !== null) {
+        return;
+      }
       state.error = null;
     });
     builder.addCase(fetchMarketDataPerPair.rejected, (state) => {
       state.cryptoPairPriceLoading = false;
+    
       state.error = null;
     });
     builder.addCase(fetchMarketDataPerPair.pending, (state) => {
       state.cryptoPairPriceLoading = true;
+   
       state.error = null;
     });
 

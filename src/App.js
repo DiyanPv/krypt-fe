@@ -5,7 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 
 function App() {
-  const markets = ["BINANCE", "HUOBI", "KRAKEN", "BITFINEX"];
+  const markets = ["BINANCE", "HUOBI", "KRAKEN", "BITFINEX", ""];
 
   return (
     <div className="app">
