@@ -1,7 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { pricesReducer } from "./pricesReducer";
+import cryptoDataReducer from "./cryptoDataReducer";
+
 export const store = configureStore({
   reducer: {
-    prices: pricesReducer,
+    cryptoData: cryptoDataReducer,
   },
 });

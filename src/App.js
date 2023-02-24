@@ -1,6 +1,9 @@
-import "./App.css";
+import { CryptoResults } from "./components/cryptoresults/CryptoResults";
 import { Header } from "./components/header/Header";
 import { SearchForm } from "./components/searchForm/Form";
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+
 function App() {
   const markets = ["BINANCE", "HUOBI", "KRAKEN", "BITFINEX"];
 
@@ -8,7 +11,8 @@ function App() {
     <div className="app">
       <div className="app-homescreen">
         <Header markets={markets} />
-        <SearchForm />
+        <SearchForm markets={markets}/>
+        <CryptoResults />
       </div>
     </div>
   );
