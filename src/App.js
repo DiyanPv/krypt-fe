@@ -10,8 +10,8 @@ function App() {
   return (
     <div className="app">
       <div className="app-homescreen">
-        <Header markets={markets} />
-        <SearchForm markets={markets}/>
+        <Header />
+        <SearchForm markets={markets} />
         <CryptoResults />
       </div>
     </div>

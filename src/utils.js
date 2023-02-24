@@ -14,7 +14,7 @@ export const getMarketDataForPair = async (from, to, market) => {
       return err;
     }
   } else {
-    return `Can not search without input data or chosen market`;
+    return `Cannot search without input data`;
   }
 };
 
@@ -34,27 +34,21 @@ export const getLastHourDataForPair = async (from, to, market) => {
   }
 };
 
-const ws = new WebSocket(
-  `wss://streamer.cryptocompare.com/v2?subscribe=MARKETNAME~PAIRNAME`
-);
+// export const getCryptoDataFromWebsocket = (from, to, market) => {
+//   // example socket connection 'wss://streamer.cryptocompare.com/v2?subscribe=binance~BTC~ETH'
+//   const ws = new WebSocket(
+//     `wss://streamer.cryptocompare.com/v2?subscribe=${market.toLowerCase()}~${from}~${to}`
+//   );
+//   ws.onopen = () => {
+//     console.log("WebSocket connection established");
+//   };
 
-export const getCryptoDataFromWebsocket = (from, to, market) => {
-  // example socket connection 'wss://streamer.cryptocompare.com/v2?subscribe=binance~BTC~ETH'
-  const ws = new WebSocket(
-    `wss://streamer.cryptocompare.com/v2?subscribe=${market.toLowerCase()}~${from}~${to}`
-  );
-  ws.onopen = () => {
-    console.log("WebSocket connection established");
-  };
-
-  ws.onmessage = (event) => {
-    console.log(event)
-    const data = JSON.parse(event.data);
-    console.log(data);
-  };
-};
-
-getCryptoDataFromWebsocket(`BTC`, `USDT`, `huobi`);
+//   ws.onmessage = (event) => {
+//     console.log(event)
+//     const data = JSON.parse(event.data);
+//     console.log(data);
+//   };
+// };
 
 // import ccxt from "ccxt";
 // const httpProxy = require("http-proxy");

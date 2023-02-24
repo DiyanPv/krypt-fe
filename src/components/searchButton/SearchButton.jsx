@@ -1,10 +1,13 @@
 import React from "react";
-import { useState } from "react";
 import { searchButtonClasses } from "./SearchButtonClasses";
-export const SubmitButton = ({ onClick }) => {
+import { Link } from "react-router-dom";
+export const SubmitButton = ({ onClick, pair }) => {
+  const { fromValue, toValue } = pair;
   return (
-    <button className={searchButtonClasses} onClick={(e) => onClick(e)}>
-      Search quotes
+    <button onClick={(e) => onClick(e)}>
+      <Link to={`${fromValue}${toValue}`} className={searchButtonClasses}>
+        SEARCH QUOTES
+      </Link>
     </button>
   );
 };
