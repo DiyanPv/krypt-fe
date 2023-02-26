@@ -9,7 +9,6 @@ import "./index.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 // const portal = ReactDOM.createRoot(document.getElementById(`portal`))
 
-console.log('store= > ', store)
 root.render(
 
     <BrowserRouter>

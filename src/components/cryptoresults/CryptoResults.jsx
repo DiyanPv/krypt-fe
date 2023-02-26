@@ -36,7 +36,7 @@ export const CryptoResults = ({ marketPair, markets, isOpen }) => {
   //default buy/sell set an empty string for useEffect Call in case we are not on /{cryptoPair page}
 
   useEffect(() => {
-    if ((!markets && !buy && !sell) || (buy == `` && sell == ``)) {
+    if ((!markets && !buy && !sell) || (buy === `` && sell === ``)) {
       return;
     }
     markets.map(async (market) => {
@@ -166,21 +166,21 @@ export const CryptoResults = ({ marketPair, markets, isOpen }) => {
                       <p
                         className="font-medium cursor-pointer sm:text-[0.5rem]"
                         onClick={async () => {
-                          setIsDetailsOpen(!isDetailsOpen);
-                          setIsOpenModal(!isOpenModal);
+                          let buy = pair.split(`-`)[0];
+                          let sell = pair.split(`-`)[1];
                           if (
                             cryptoHistoryPerPair.length <= 0 &&
                             modalData.length <= 0
                           ) {
-                            markets.map(async (market) => {
+                            await markets.map(async (market) => {
                               dispatch(
-                                await fetchMarketDataPerPair({
+                                fetchMarketDataPerPair({
                                   from: buy.toUpperCase(),
                                   to: sell.toUpperCase(),
                                   market,
                                 })
                               );
-                              setModalData((prevState) => [
+                              await setModalData((prevState) => [
                                 ...prevState,
                                 {
                                   from: buy,
@@ -190,9 +190,6 @@ export const CryptoResults = ({ marketPair, markets, isOpen }) => {
                               ]);
                             });
                           } else {
-                            let buy = pair.split(`-`)[0];
-                            let sell = pair.split(`-`)[1];
-
                             await modalData.forEach((object) => {
                               const newObj = {
                                 from: buy,
@@ -202,6 +199,8 @@ export const CryptoResults = ({ marketPair, markets, isOpen }) => {
                               dispatch(fetchHourlyPreviousDataPerPair(newObj));
                             });
                           }
+                          setIsDetailsOpen(!isDetailsOpen);
+                          setIsOpenModal(!isOpenModal);
                         }}
                       >
                         {pair}

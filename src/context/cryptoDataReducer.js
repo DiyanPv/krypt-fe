@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   getMarketDataForPair,
   getLastHourDataForPair,
-  getCryptoDataFromWebsocket,
+  // getCryptoDataFromWebsocket,
 } from "../services";
 
 export const fetchMarketDataPerPair = createAsyncThunk(
@@ -38,7 +38,6 @@ const cryptoDataReducer = createSlice({
   reducers: {
     getCryptoHistoryPerMarketAndPair: (state, payload) => {
       const { pair, market } = payload;
-      console.log(pair, market);
       return state.cryptoHistoryPerPair[market][pair];
     },
   },
@@ -48,7 +47,6 @@ const cryptoDataReducer = createSlice({
       state.cryptoPairPriceLoading = false;
       const { market, res } = action.payload;
       const pair = Object.keys(res)[0];
-      const price = Object.keys(res)[1];
       if (isNaN(res[pair])) {
         state.error = res;
         return;
@@ -95,7 +93,6 @@ const cryptoDataReducer = createSlice({
         }
 
         state.cryptoHistoryPerPair.push({ [market]: data });
- 
       }
     );
     builder.addCase(fetchHourlyPreviousDataPerPair.rejected, (state) => {

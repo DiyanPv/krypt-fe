@@ -57,7 +57,6 @@ export const getLastHourDataForPair = async (from, to, market) => {
 // const mapData = (data) => {};
 
 // const queryMarketData = async (pair, market) => {
-//   console.log(`market is => ${market}`);
 //   if (market == `huobi`) {
 //     market = `huobipro`;
 //   }
@@ -65,7 +64,6 @@ export const getLastHourDataForPair = async (from, to, market) => {
 //   const exchangeMarket = new ccxt[market]({
 //     agent,
 //   });
-//   console.log("exh market => ", exchangeMarket);
 
 //   try {
 //     const res = await exchangeMarket.fetchTicker(pair);
