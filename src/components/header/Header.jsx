@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { SiEthereum } from "react-icons/si";
-import { useLocation } from "react-router-dom";
 
 export const Header = () => {
   return (
@@ -14,7 +13,7 @@ export const Header = () => {
           </span>
         </p>
       </Link>
-      <p className="text-stone-600 lg:text-2xl font-mono sm:text-sm">
+      <p className="text-stone-600 lg:text-2xl font-mono sm:text-sm mb-20">
         Your Liquidity Provision Assistant
       </p>
     </div>

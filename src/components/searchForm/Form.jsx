@@ -3,8 +3,7 @@ import { SubmitButton } from "../searchButton/SearchButton";
 import { Input } from "../inputField/Input";
 import React, { useState } from "react";
 import { fetchMarketDataPerPair } from "../../context/cryptoDataReducer";
-import { useDispatch } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
 export const SearchForm = ({ markets }) => {
   const dispatch = useDispatch();
 

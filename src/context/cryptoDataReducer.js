@@ -3,7 +3,7 @@ import {
   getMarketDataForPair,
   getLastHourDataForPair,
   getCryptoDataFromWebsocket,
-} from "../utils";
+} from "../services";
 
 export const fetchMarketDataPerPair = createAsyncThunk(
   "crypto/getCryptoPrice",
@@ -15,12 +15,12 @@ export const fetchMarketDataPerPair = createAsyncThunk(
 );
 
 export const fetchHourlyPreviousDataPerPair = createAsyncThunk(
-  "crypto/getCryptoData",
+  "crypto/getCryptoHourlyData",
   async (payload) => {
     const { from, to, market } = payload;
     const res = await getLastHourDataForPair(from, to, market);
 
-    return { market, res };
+    return { [market]: res };
   }
 );
 
@@ -29,7 +29,7 @@ const initialState = {
   cryptoHistoryDataLoading: false,
   error: null,
   cryptoPairsPerMarket: {},
-  cryptoHistoryPerPair: {},
+  cryptoHistoryPerPair: [],
 };
 
 const cryptoDataReducer = createSlice({
@@ -38,7 +38,7 @@ const cryptoDataReducer = createSlice({
   reducers: {
     getCryptoHistoryPerMarketAndPair: (state, payload) => {
       const { pair, market } = payload;
-
+      console.log(pair, market);
       return state.cryptoHistoryPerPair[market][pair];
     },
   },
@@ -64,12 +64,16 @@ const cryptoDataReducer = createSlice({
     });
     builder.addCase(fetchMarketDataPerPair.rejected, (state) => {
       state.cryptoPairPriceLoading = false;
-    
+      if (state.error !== null) {
+        return;
+      }
       state.error = null;
     });
     builder.addCase(fetchMarketDataPerPair.pending, (state) => {
       state.cryptoPairPriceLoading = true;
-   
+      if (state.error !== null) {
+        return;
+      }
       state.error = null;
     });
 
@@ -78,17 +82,20 @@ const cryptoDataReducer = createSlice({
       fetchHourlyPreviousDataPerPair.fulfilled,
       (state, action) => {
         state.cryptoHistoryDataLoading = false;
-        const { market, res } = action.payload;
-        const pair = Object.keys(res)[0];
-        if (!Array.isArray(res[pair])) {
-          state.error = res;
+        const market = Object.keys(action.payload)[0];
+        const pair = Object.keys(action.payload[market])[0];
+        const data = action.payload[market][pair];
+        if (!Array.isArray(data)) {
+          state.error = action.payload;
           return;
         }
 
-        if (!state.cryptoHistoryPerPair[market])
-          state.cryptoHistoryPerPair[market] = {};
-        state.cryptoHistoryPerPair[market][pair] = res[pair];
-        state.error = null;
+        if (!state.cryproHistoryPerPair) {
+          state.cryptoHistoryPerPair = [];
+        }
+
+        state.cryptoHistoryPerPair.push({ [market]: data });
+ 
       }
     );
     builder.addCase(fetchHourlyPreviousDataPerPair.rejected, (state) => {

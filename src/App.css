@@ -6,11 +6,11 @@
 }
 .app-homescreen {
   display: flex;
+  height: 100%;
   flex-direction: column;
   padding-top: 1.5rem;
   align-items: center;
   justify-content: space-between;
-  gap: 6rem;
 }
 
 .header-wrapper {
@@ -20,7 +20,6 @@
   color: black;
   width: 100%;
   gap: 1.4rem;
-  margin-top: 3rem;
 }
 
 .header-markets-wrapper {
@@ -30,4 +29,20 @@
 
 .active {
   color: white;
+}
+
+.fadeRightMini {
+  animation: fadeRightMini 2s;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeRightMini {
+  0% {
+    opacity: 0;
+    transform: translate3d(40%, 0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateZ(0);
+  }
 }

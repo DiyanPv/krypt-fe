@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
 import { MoonLoader } from "react-spinners";
-import { fetchHourlyPreviousDataPerPair } from "../../context/cryptoDataReducer";
+import {
+  fetchHourlyPreviousDataPerPair,
+  fetchMarketDataPerPair,
+} from "../../context/cryptoDataReducer";
 
 const customStyles = {
   content: {
@@ -15,31 +18,74 @@ const customStyles = {
   },
 };
 
-export const CryptoResults = () => {
-  let marketName;
-  const dispatch = useDispatch();
-
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalData, setModalData] = useState({});
-
+export const CryptoResults = ({ marketPair, markets, isOpen }) => {
   const {
     cryptoPairsPerMarket,
-    error,
     cryptoPairPriceLoading,
     cryptoHistoryDataLoading,
     cryptoHistoryPerPair,
   } = useSelector((state) => state.cryptoData);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(isOpen);
+  let buy;
+  let sell;
+  if (marketPair) {
+    [buy, sell] = marketPair.split(`-`);
+  } else {
+    [buy, sell] = ["", ""];
+  }
+  //default buy/sell set an empty string for useEffect Call in case we are not on /{cryptoPair page}
 
   useEffect(() => {
-    if (!isOpenModal) return;
-    dispatch(fetchHourlyPreviousDataPerPair(modalData));
-  }, [isOpenModal]);
+    if ((!markets && !buy && !sell) || (buy == `` && sell == ``)) {
+      return;
+    }
+    markets.map(async (market) => {
+      dispatch(
+        await fetchMarketDataPerPair({
+          from: buy.toUpperCase(),
+          to: sell.toUpperCase(),
+          market,
+        })
+      );
+
+      setModalData((prevState) => [
+        ...prevState,
+        {
+          from: buy,
+          to: sell,
+          market: market,
+        },
+      ]);
+    });
+  }, []);
+
+  const dispatch = useDispatch();
+
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [modalData, setModalData] = useState([]);
+
+  useEffect(() => {
+    if (isOpenModal || !modalData) return;
+    if (modalData) {
+      modalData.map((object) => {
+        dispatch(fetchHourlyPreviousDataPerPair(object));
+      });
+    }
+    ///
+  }, [isOpenModal, modalData]);
 
   return (
     <>
-      <Modal isOpen={isOpenModal} style={customStyles} ariaHideApp={false}>
+      <Modal
+        isOpen={isOpenModal || isDetailsOpen}
+        style={customStyles}
+        ariaHideApp={false}
+      >
         <div
-          onClick={() => setIsOpenModal(!isOpenModal)}
+          onClick={() => {
+            setIsDetailsOpen(!isOpenModal);
+            setIsOpenModal(!isOpenModal);
+          }}
           className={`cursor-pointer border-2 w-1/5 rounded-full flex justify-center font-bold mb-6`}
         >
           X
@@ -47,34 +93,42 @@ export const CryptoResults = () => {
         {cryptoHistoryDataLoading ? (
           <MoonLoader cssOverride={{ position: `absolute`, top: `50%` }} />
         ) : (
-          (
-            (Object.keys(cryptoHistoryPerPair).map((market) => {
-              marketName = market;
-            }).length > 0 &&
-              cryptoHistoryPerPair[marketName] &&
-              cryptoHistoryPerPair[marketName][
-                `${modalData.from}-${modalData.to}`
-              ]) ||
-            []
-          ).map((item, idx) => {
-            const { low, high } = item;
-            return (
-              <div className="flex flex-row justify-between gap-4 font-bold" key={`${item}-${idx}`}>
-                <p>Low: {low.toFixed(2)}</p>
-                <p>High: {high.toFixed(2)}</p>
-              </div>
-            );
-          })
+          <div>
+            {(cryptoHistoryPerPair || isDetailsOpen || isOpenModal) &&
+              cryptoHistoryPerPair.map((el, idx) => {
+                return (
+                  <div
+                    className="flex flex-col font-bold text-center"
+                    key={`main-modal-screen-${idx}`}
+                  >
+                    {Object.keys(el).map((market) => {
+                      return el[market].map(({ low, high }, idx) => {
+                        return (
+                          <div
+                            className="flex flex-col gap-2 font-light"
+                            key={`element-tradeData-${
+                              Object.keys(el[market])[0]
+                            }-${idx}`}
+                          >
+                            <p className="text-red-400">
+                              Low: {low.toFixed(4)}
+                            </p>
+                            <p className="text-green-300">
+                              High: {high.toFixed(4)}
+                            </p>
+                            <div className="w-full border-2 border-black"></div>
+                          </div>
+                        );
+                      });
+                    })}
+                  </div>
+                );
+              })}
+          </div>
         )}
       </Modal>
-      <div
-        className={`bg-red-500 ${
-          error ? `p-3` : ``
-        } rounded-full lg:text-xl md:text-md font-bold sm:text-sm flex flex-wrap`}
-      >
-        {error}
-      </div>
-      <div className="w-full flex justify-around border-t-8 mt-20 pt-16 pb-16 bg-gradient-to-r from-cyan-500 to-blue-500 absolute bottom-0 flex-wrap gap-2">
+
+      <div className="w-full flex justify-around border-t-8 mt-20 pt-8 pb-8 bg-gradient-to-r from-cyan-500 to-blue-500 flex-wrap gap-2">
         {cryptoPairPriceLoading ? (
           <MoonLoader
             cssOverride={{
@@ -91,7 +145,7 @@ export const CryptoResults = () => {
 
             return (
               <div
-                className="border-4 lg:w-[20%]  justify-center items-center flex flex-col rounded-md bg-[white] pt-4 pb-4"
+                className="border-4 lg:w-[20%]  justify-center items-center flex flex-col rounded-md bg-[white] pt-4 pb-4 fadeRightMini"
                 key={`${market}-${cryptoPairAndPriceObject}`}
               >
                 <p className=" font-bold">{market}</p>
@@ -111,13 +165,43 @@ export const CryptoResults = () => {
                     >
                       <p
                         className="font-medium cursor-pointer sm:text-[0.5rem]"
-                        onClick={() => {
+                        onClick={async () => {
+                          setIsDetailsOpen(!isDetailsOpen);
                           setIsOpenModal(!isOpenModal);
-                          setModalData({
-                            from: pair.split("-")[0],
-                            to: pair.split("-")[1],
-                            market: market,
-                          });
+                          if (
+                            cryptoHistoryPerPair.length <= 0 &&
+                            modalData.length <= 0
+                          ) {
+                            markets.map(async (market) => {
+                              dispatch(
+                                await fetchMarketDataPerPair({
+                                  from: buy.toUpperCase(),
+                                  to: sell.toUpperCase(),
+                                  market,
+                                })
+                              );
+                              setModalData((prevState) => [
+                                ...prevState,
+                                {
+                                  from: buy,
+                                  to: sell,
+                                  market: market,
+                                },
+                              ]);
+                            });
+                          } else {
+                            let buy = pair.split(`-`)[0];
+                            let sell = pair.split(`-`)[1];
+
+                            await modalData.forEach((object) => {
+                              const newObj = {
+                                from: buy,
+                                to: sell,
+                                market: object.market,
+                              };
+                              dispatch(fetchHourlyPreviousDataPerPair(newObj));
+                            });
+                          }
                         }}
                       >
                         {pair}

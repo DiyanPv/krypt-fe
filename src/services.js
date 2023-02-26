@@ -14,7 +14,7 @@ export const getMarketDataForPair = async (from, to, market) => {
       return err;
     }
   } else {
-    return `Cannot search without input data`;
+    return `Input data required!`;
   }
 };
 
@@ -26,7 +26,6 @@ export const getLastHourDataForPair = async (from, to, market) => {
       exchange: market,
       limit: 3,
     });
-    console.log(historyData);
     return {
       [pair]: historyData.map((item) => ({ low: item.low, high: item.high })),
     };
