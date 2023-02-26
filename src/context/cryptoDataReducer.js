@@ -36,9 +36,35 @@ const cryptoDataReducer = createSlice({
   name: `cryptoData`,
   initialState,
   reducers: {
-    getCryptoHistoryPerMarketAndPair: (state, payload) => {
-      const { pair, market } = payload;
-      return state.cryptoHistoryPerPair[market][pair];
+    filterCryptoPairs: (state, action) => {
+      switch (action.payload) {
+        case true:
+          const sortedDesc = Object.entries(state.cryptoPairsPerMarket)
+            .map(([exchange, prices]) => ({
+              exchange,
+              prices: Object.entries(prices).sort((a, b) => b[1] - a[1]),
+            }))
+            .reduce((result, { exchange, prices }) => {
+              result[exchange] = Object.fromEntries(prices);
+              return result;
+            }, {});
+          state.cryptoPairsPerMarket = sortedDesc;
+
+          break;
+        case false:
+          const sortedAsc = Object.entries(state.cryptoPairsPerMarket)
+          .map(([exchange, prices]) => ({
+            exchange,
+            prices: Object.entries(prices).sort((a, b) => a[1] - b[1]),
+          }))
+          .reduce((result, { exchange, prices }) => {
+            result[exchange] = Object.fromEntries(prices);
+            return result;
+          }, {});
+          state.cryptoPairsPerMarket = sortedAsc;
+
+          break;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -51,7 +77,6 @@ const cryptoDataReducer = createSlice({
         state.error = res;
         return;
       }
-
       if (!state.cryptoPairsPerMarket[market])
         state.cryptoPairsPerMarket[market] = {};
       state.cryptoPairsPerMarket[market][pair] = res[pair];
@@ -106,6 +131,6 @@ const cryptoDataReducer = createSlice({
   },
 });
 
-export const { addCryptoPair } = cryptoDataReducer.actions;
+export const { filterCryptoPairs } = cryptoDataReducer.actions;
 
 export default cryptoDataReducer.reducer;

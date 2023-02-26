@@ -7,6 +7,8 @@ import {
   fetchMarketDataPerPair,
 } from "../../context/cryptoDataReducer";
 import { BsQuestionCircleFill } from "react-icons/bs";
+import { HiSortAscending, HiSortDescending } from "react-icons/hi";
+import { filterCryptoPairs } from "../../context/cryptoDataReducer";
 const customStyles = {
   content: {
     top: "50%",
@@ -26,6 +28,7 @@ export const CryptoResults = ({ marketPair, markets, isOpen }) => {
     cryptoHistoryPerPair,
   } = useSelector((state) => state.cryptoData);
   const [isDetailsOpen, setIsDetailsOpen] = useState(isOpen);
+  const [isDescending, setIsDescending] = useState(true);
   let buy;
   let sell;
   if (marketPair) {
@@ -73,13 +76,14 @@ export const CryptoResults = ({ marketPair, markets, isOpen }) => {
     }
     ///
   }, [isOpenModal, modalData]);
-
+console.log(cryptoPairsPerMarket);
   return (
     <>
       <Modal
         isOpen={isOpenModal || isDetailsOpen}
         style={customStyles}
         ariaHideApp={false}
+ 
       >
         <div
           onClick={() => {
@@ -101,6 +105,7 @@ export const CryptoResults = ({ marketPair, markets, isOpen }) => {
                     className="flex flex-col font-bold text-center"
                     key={`main-modal-screen-${idx}`}
                   >
+                    Trading Data:
                     {Object.keys(el).map((market) => {
                       return el[market].map(({ low, high }, idx) => {
                         return (
@@ -150,9 +155,21 @@ export const CryptoResults = ({ marketPair, markets, isOpen }) => {
               >
                 <p className=" font-bold">{market}</p>
 
-                <div className="flex-row flex justify-between w-[80%] ">
-                  <p className=" font-bold ">Pair</p>
-                  <p className=" font-bold">Price</p>
+                <div className="flex-row flex justify-between w-[80%] border-2">
+                  <p className=" font-bold flex grow pl-2 ">Pair</p>
+                  <div className="font-bold bg-black">|</div>
+                  <p
+                    className={`font-bold flex items-center gap-1 cursor-pointer grow justify-end pr-2  ${
+                      isDescending ? `hover:bg-green-500` : `hover:bg-red-400` 
+                    }`}
+                    onClick={() => {
+                      setIsDescending(!isDescending);
+                      dispatch(filterCryptoPairs(isDescending));
+                    }}
+                  >
+                    Price
+                    {isDescending ? <HiSortDescending /> : <HiSortAscending />}
+                  </p>
                 </div>
 
                 {Object.entries(cryptoPairAndPriceObject).map((el) => {
