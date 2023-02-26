@@ -33,6 +33,7 @@ export const SearchForm = ({ markets }) => {
           <Input
             label={"BUY"}
             name={"BUY"}
+            placeholderValue={"Buy Crypto Name"}
             value={fromValue.toUpperCase()}
             onChangeHandler={(e) => setFromValue(e.target.value.toUpperCase())}
           />
@@ -40,6 +41,7 @@ export const SearchForm = ({ markets }) => {
           <Input
             label={"SELL"}
             name={"SELL"}
+            placeholderValue={"Sell Crypto Name"}
             value={toValue.toUpperCase()}
             onChangeHandler={(e) => setToValue(e.target.value.toUpperCase())}
           />

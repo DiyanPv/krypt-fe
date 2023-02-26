@@ -4,10 +4,9 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        'sm': { 'raw': '(max-height: 500px)' },
-        
-      }
-    }
+        sm: { raw: "(max-width: 600px)" },
+      },
+    },
   },
   plugins: [],
-}
+};

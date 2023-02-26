@@ -6,7 +6,7 @@ import {
   fetchHourlyPreviousDataPerPair,
   fetchMarketDataPerPair,
 } from "../../context/cryptoDataReducer";
-
+import { BsQuestionCircleFill } from "react-icons/bs";
 const customStyles = {
   content: {
     top: "50%",
@@ -160,11 +160,11 @@ export const CryptoResults = ({ marketPair, markets, isOpen }) => {
                   const price = el[1];
                   return (
                     <div
-                      className="flex justify-between w-[80%]"
+                      className="flex justify-between w-[80%] sm:gap-5"
                       key={`${pair}-${[price]}`}
                     >
                       <p
-                        className="font-medium cursor-pointer sm:text-[0.5rem]"
+                        className="font-medium cursor-pointer sm:text-xs flex gap-1 items-center"
                         onClick={async () => {
                           let buy = pair.split(`-`)[0];
                           let sell = pair.split(`-`)[1];
@@ -203,9 +203,9 @@ export const CryptoResults = ({ marketPair, markets, isOpen }) => {
                           setIsOpenModal(!isOpenModal);
                         }}
                       >
-                        {pair}
+                        {pair} <BsQuestionCircleFill />
                       </p>
-                      <p className="font-medium">${price}</p>
+                      <p className="font-medium text-lg sm:text-xs">${price}</p>
                     </div>
                   );
                 })}
