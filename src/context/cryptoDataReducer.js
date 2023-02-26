@@ -53,14 +53,14 @@ const cryptoDataReducer = createSlice({
           break;
         case false:
           const sortedAsc = Object.entries(state.cryptoPairsPerMarket)
-          .map(([exchange, prices]) => ({
-            exchange,
-            prices: Object.entries(prices).sort((a, b) => a[1] - b[1]),
-          }))
-          .reduce((result, { exchange, prices }) => {
-            result[exchange] = Object.fromEntries(prices);
-            return result;
-          }, {});
+            .map(([exchange, prices]) => ({
+              exchange,
+              prices: Object.entries(prices).sort((a, b) => a[1] - b[1]),
+            }))
+            .reduce((result, { exchange, prices }) => {
+              result[exchange] = Object.fromEntries(prices);
+              return result;
+            }, {});
           state.cryptoPairsPerMarket = sortedAsc;
 
           break;

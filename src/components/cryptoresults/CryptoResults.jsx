@@ -159,7 +159,7 @@ console.log(cryptoPairsPerMarket);
                   <p className=" font-bold flex grow pl-2 ">Pair</p>
                   <div className="font-bold bg-black">|</div>
                   <p
-                    className={`font-bold flex items-center gap-1 cursor-pointer grow justify-end pr-2  ${
+                    className={`font-bold flex items-center gap-1 cursor-pointer grow justify-end pr-2 ease-in duration-300 ${
                       isDescending ? `hover:bg-green-500` : `hover:bg-red-400` 
                     }`}
                     onClick={() => {
@@ -168,7 +168,7 @@ console.log(cryptoPairsPerMarket);
                     }}
                   >
                     Price
-                    {isDescending ? <HiSortDescending /> : <HiSortAscending />}
+                    {isDescending ? <HiSortAscending /> : <HiSortDescending />}
                   </p>
                 </div>
 
