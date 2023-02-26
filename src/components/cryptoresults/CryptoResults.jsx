@@ -155,9 +155,9 @@ console.log(cryptoPairsPerMarket);
               >
                 <p className=" font-bold">{market}</p>
 
-                <div className="flex-row flex justify-between w-[80%] border-2">
+                <div className="flex-row flex justify-between w-[80%] border-2 border-black">
                   <p className=" font-bold flex grow pl-2 ">Pair</p>
-                  <div className="font-bold bg-black">|</div>
+                  <div className="font-bold">|</div>
                   <p
                     className={`font-bold flex items-center gap-1 cursor-pointer grow justify-end pr-2 ease-in duration-300 ${
                       isDescending ? `hover:bg-green-500` : `hover:bg-red-400` 

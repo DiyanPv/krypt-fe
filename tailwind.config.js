@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       screens: {
         sm: { raw: "(max-width: 600px)" },
+        md: { raw: "(max-width: 850px)" },
       },
     },
   },
