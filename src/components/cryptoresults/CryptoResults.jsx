@@ -76,14 +76,13 @@ export const CryptoResults = ({ marketPair, markets, isOpen }) => {
     }
     ///
   }, [isOpenModal, modalData]);
-console.log(cryptoPairsPerMarket);
+  console.log(cryptoPairsPerMarket);
   return (
     <>
       <Modal
         isOpen={isOpenModal || isDetailsOpen}
         style={customStyles}
         ariaHideApp={false}
- 
       >
         <div
           onClick={() => {
@@ -160,7 +159,7 @@ console.log(cryptoPairsPerMarket);
                   <div className="font-bold">|</div>
                   <p
                     className={`font-bold flex items-center gap-1 cursor-pointer grow justify-end pr-2 ease-in duration-300 ${
-                      isDescending ? `hover:bg-green-500` : `hover:bg-red-400` 
+                      isDescending ? `hover:bg-green-500` : `hover:bg-red-400`
                     }`}
                     onClick={() => {
                       setIsDescending(!isDescending);
@@ -220,7 +219,8 @@ console.log(cryptoPairsPerMarket);
                           setIsOpenModal(!isOpenModal);
                         }}
                       >
-                        {pair} <BsQuestionCircleFill />
+                        {pair}{" "}
+                        <BsQuestionCircleFill title="Click to see Trade Details" />
                       </p>
                       <p className="font-medium text-lg sm:text-xs">${price}</p>
                     </div>
