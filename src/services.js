@@ -1,5 +1,4 @@
 const cc = require("cryptocompare");
-
 export const getMarketDataForPair = async (from, to, market) => {
   if (from && to && market) {
     try {
@@ -34,22 +33,40 @@ export const getLastHourDataForPair = async (from, to, market) => {
   }
 };
 
-// export const getCryptoDataFromWebsocket = (from, to, market) => {
-//   // example socket connection 'wss://streamer.cryptocompare.com/v2?subscribe=binance~BTC~ETH'
-//   const ws = new WebSocket(
-//     `wss://streamer.cryptocompare.com/v2?subscribe=${market.toLowerCase()}~${from}~${to}`
+
+//attempt to connect to cryptocompare's websocket API. Leaving it for reference
+// export const connectToCryptoCompare = (from, to, market) => {
+//   const socket = new WebSocket(
+//     `wss://streamer.cryptocompare.com/v2?api_key=${window.MY_API_KEY}`
 //   );
-//   ws.onopen = () => {
-//     console.log("WebSocket connection established");
-//   };
 
-//   ws.onmessage = (event) => {
-//     console.log(event)
-//     const data = JSON.parse(event.data);
-//     console.log(data);
-//   };
+//   socket.addEventListener("open", (event) => {
+//     console.log("Connected to CryptoCompare WebSocket");
+
+//     const subRequest = {
+//       action: "SubAdd",
+//       subs: [`5~${market}~${from}~${to}`],
+//     };
+
+//     socket.send(JSON.stringify(subRequest));
+//     console.log("Subscribed to BTC/USD price updates");
+//   });
+
+//   socket.addEventListener("message", (event) => {
+//     try {
+//       const message = JSON.parse(event.data);
+//       const pair = `${from}-${to}`;
+//       console.log(message.PRICE);
+//       // return { [pair]: message.PRICE.toFixed(4) };
+//     } catch (err) {
+//       return err;
+//     }
+//   });
+
+//   socket.addEventListener("error", (event) => {
+//     console.error("WebSocket error:", event);
+//   });
 // };
-
 // import ccxt from "ccxt";
 // const httpProxy = require("http-proxy");
 // const proxy = `http://localhost:3000/`;

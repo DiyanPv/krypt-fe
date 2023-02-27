@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   getMarketDataForPair,
   getLastHourDataForPair,
-  // getCryptoDataFromWebsocket,
+  connectToCryptoCompare,
 } from "../services";
 
 export const fetchMarketDataPerPair = createAsyncThunk(
@@ -10,6 +10,8 @@ export const fetchMarketDataPerPair = createAsyncThunk(
   async (payload) => {
     const { from, to, market } = payload;
     const res = await getMarketDataForPair(from, to, market);
+    // connectToCryptoCompare(from, to, market);
+    //attempt to connect to the websocket API
     return { market, res };
   }
 );
