@@ -76,7 +76,6 @@ export const CryptoResults = ({ marketPair, markets, isOpen }) => {
     }
     ///
   }, [isOpenModal, modalData]);
-  console.log(cryptoPairsPerMarket);
   return (
     <>
       <Modal
